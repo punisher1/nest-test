@@ -4,6 +4,8 @@ import { ConfigService } from '../config/config.service'
 import { AuthGuard } from '@nestjs/passport'
 import { Request } from 'express'
 import { AuthService } from '../auth/auth.service'
+import { UsersService } from './users.service'
+import { User } from './entities/user.entity'
 
 @Controller()
 export class UsersController {
@@ -12,18 +14,13 @@ export class UsersController {
   constructor(
     private readonly configService: ConfigService,
     private readonly authService: AuthService,
+    private readonly userService: UsersService,
   ) {
 
   }
   @Get('users')
-  getUsers(): string[] {
-    return [
-      'iori',
-      'mzf',
-      'marcus',
-      'wendy',
-      'mazhihui',
-    ]
+  async getUsers(): Promise<User[]> {
+    return this.userService.findAll()
   }
 
   @Get('users/:id')

@@ -1,18 +1,18 @@
 import { Injectable, Logger } from '@nestjs/common'
-
-export interface User {
-  id: number,
-  account: string,
-  password: string
-}
+import { InjectRepository } from '@nestjs/typeorm'
+import { User } from './entities/user.entity'
+import { Repository } from 'typeorm'
 
 @Injectable()
 export class UsersService {
   private readonly logger = new Logger(UsersService.name)
 
-  private readonly users: User[]
+  private readonly users: any[]
 
-  constructor() {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+  ) {
     this.users = [
       { id: 1, account: 'iori', password: '1234' },
       { id: 2, account: 'mzf', password: '1111' },
@@ -21,8 +21,12 @@ export class UsersService {
     ]
   }
 
-  async findOne(account: string): Promise<User | undefined> {
+  async findOne(account: string): Promise<any | undefined> {
     this.logger.debug(account)
     return this.users.find(user => user.account === account)
+  }
+
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find()
   }
 }

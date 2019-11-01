@@ -9,6 +9,11 @@ export class ConfigService {
 
   constructor(filePath: string) {
     this.envConfig = dotenv.parse(fs.readFileSync(filePath))
+    for (const k in this.envConfig) {
+      if (this.envConfig.hasOwnProperty(k)) {
+        process.env[k] = this.envConfig[k]
+      }
+    }
   }
 
   get(key: string): string {
